@@ -86,7 +86,7 @@ def main():
 
     # Compose function for 4th column: (A ∪ B) − C
     def compose(a, b, c):
-        return (a | b) & c
+        return (a | b) | c
 
     # Set global bounds for consistent grid
     xlim = (-2.6, 2.6)
@@ -102,7 +102,7 @@ def main():
     plot_shape_colored(axs[0, 0], circ1, xlim, ylim, "Circle T1")
     plot_shape_colored(axs[0, 1], circ2, xlim, ylim, "Circle T2")
     plot_shape_colored(axs[0, 2], circ3, xlim, ylim, "Circle T3")
-    plot_shape_colored(axs[0, 3], circ_comp, xlim, ylim, "(T1 ∪ T2) − T3")
+    plot_shape_colored(axs[0, 3], circ_comp, xlim, ylim, "T1 ∪ T2 ∪ T3")
     axs[0, 0].set_ylabel("Circle", fontsize=11)
 
     # Row 2: Square
@@ -113,7 +113,7 @@ def main():
     plot_shape_colored(axs[1, 0], sq1, xlim, ylim, "Square T1")
     plot_shape_colored(axs[1, 1], sq2, xlim, ylim, "Square T2")
     plot_shape_colored(axs[1, 2], sq3, xlim, ylim, "Square T3")
-    plot_shape_colored(axs[1, 3], sq_comp, xlim, ylim, "(T1 ∪ T2) − T3")
+    plot_shape_colored(axs[1, 3], sq_comp, xlim, ylim, "T1 ∪ T2 ∪ T3")
     axs[1, 0].set_ylabel("Square", fontsize=11)
 
     # Row 3: Triangle
@@ -124,7 +124,7 @@ def main():
     plot_shape_colored(axs[2, 0], tr1, xlim, ylim, "Triangle T1")
     plot_shape_colored(axs[2, 1], tr2, xlim, ylim, "Triangle T2")
     plot_shape_colored(axs[2, 2], tr3, xlim, ylim, "Triangle T3")
-    plot_shape_colored(axs[2, 3], tr_comp, xlim, ylim, "(T1 ∪ T2) − T3")
+    plot_shape_colored(axs[2, 3], tr_comp, xlim, ylim, "T1 ∪ T2 ∪ T3")
     axs[2, 0].set_ylabel("Triangle", fontsize=11)
 
     # Column titles
@@ -133,7 +133,7 @@ def main():
     axs[0, 2].set_title("Transform 3")
     axs[0, 3].set_title("Composition")
 
-    fig.suptitle("Composition grid: three transforms per shape, then (T1 ∪ T2) − T3", fontsize=14)
+    fig.suptitle("Composition grid: three transforms per shape, then T1 ∪ T2 ∪ T3", fontsize=14)
     out_path = "plots/shapes_composition.png"
     fig.savefig(out_path, dpi=220)
     plt.close(fig)

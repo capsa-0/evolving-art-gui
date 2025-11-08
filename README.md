@@ -1,6 +1,7 @@
 # evolving-art
 A framework to evolve art pieces with a variety of optimizers 
 
+![Composition grid example](plots/shapes_composition.png)
 ## Minimal geometric primitives + plotting
 
 This repo includes a minimal SDF-based geometry core with affine transforms and set operations, plus a plotting script that renders examples:
