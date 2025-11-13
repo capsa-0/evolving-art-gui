@@ -119,9 +119,8 @@ class EvolutionApp(customtkinter.CTk):
 
         self.args = args
         self.outdir = args.outdir if not args.tag else os.path.join(args.outdir, args.tag)
-        self.temp_dir = os.path.join(self.outdir, "gui_temp_renders")
         os.makedirs(self.outdir, exist_ok=True)
-        os.makedirs(self.temp_dir, exist_ok=True)
+ 
 
         self.generation = 0
         self.likes = set()
@@ -193,11 +192,10 @@ class EvolutionApp(customtkinter.CTk):
     def render_individual_for_gui(self, genome: CompositionGenome, index: int) -> Image.Image:
         """Renders a single individual in-memory and returns the PIL.Image."""
         
-        temp_path = os.path.join(self.temp_dir, f"gen_{self.generation:03d}_ind_{index:02d}.png")
-        
+
         pil_image = render_to_file(
             genome,
-            out_path=temp_path,
+            out_path='',
             resolution=GUI_IMAGE_RESOLUTION,
             dpi=72,
             title=None,
@@ -310,8 +308,7 @@ class EvolutionApp(customtkinter.CTk):
         if final:
             suffix = f"gen_{self.args.gens:03d}_final"
 
-        out_path = os.path.join(self.outdir, f"{suffix}.svg")
-        print(f"Saving grid image -> {out_path}")
+        out_path = os.path.join(self.outdir, f"{suffix}.png")
         
         render_population_grid(self.population, out_path=out_path, cols=self.args.summary_cols, use_vector=True) 
         

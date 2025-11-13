@@ -220,7 +220,8 @@ def save_genome_as_svg(
     fig.savefig(
         filename, 
         format='svg', 
-        bbox_inches='tight', 
+        bbox_inches='tight',
+        transparent=True,
         pad_inches=0
     )
     plt.close(fig)
@@ -234,7 +235,6 @@ def save_genome_as_png(
     Saves the genome as a low-res PNG using the vectorizer strategy for faster GUI display, 
     or returns the PIL Image object if filename is None (in-memory rendering).
     """
-    # Usamos un tamaño de figura pequeño, y ajustamos el DPI para obtener la resolución final.
     DPI_CALC = resolution / 3.0 
     
     fig, ax = plt.subplots(figsize=(3, 3)) 
@@ -242,7 +242,7 @@ def save_genome_as_png(
     draw_genome_on_axis(ax, genome)
     
     if filename is None:
-        # Save to an in-memory buffer
+
         buffer = io.BytesIO()
         fig.savefig(
             buffer, 
@@ -255,10 +255,9 @@ def save_genome_as_png(
         )
         plt.close(fig)
         buffer.seek(0)
-        # Load PIL Image from buffer
+
         return Image.open(buffer) 
     else:
-        # Save to file (old behavior)
         fig.savefig(
             filename, 
             format='png', 

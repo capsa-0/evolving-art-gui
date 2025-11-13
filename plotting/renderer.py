@@ -259,7 +259,6 @@ def render_population_grid(
         
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     
-    fmt = "svg" if out_path.endswith(".svg") else "png"
-    
-    fig.savefig(out_path, dpi=200, format=fmt, transparent=False, facecolor='white')
+
+    fig.savefig(out_path, dpi=200, format="png", transparent=False, facecolor='white')
     plt.close(fig)
