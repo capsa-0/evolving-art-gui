@@ -72,7 +72,7 @@ The application provides:
 ```bash
 # Install dependencies
 conda env create -f environment.yml
-conda activate evoart
+conda activate evolving-art
 
 # Launch the GUI
 python main.py
@@ -130,15 +130,15 @@ small_rotated = shape.scale(0.5).rotate(0.6).translate(0.2, -0.3)
 
 ```bash
 conda env create -f environment.yml
-conda activate evoart
+conda activate evolving-art
 ```
 
 #### Using venv
 
 ```bash
-python -m venv venv_evoart
-source venv_evoart/bin/activate  # Linux/Mac
-# or: venv_evoart\Scripts\activate  # Windows
+python -m venv venv_evolving-art
+source venv_evolving-art/bin/activate  # Linux/Mac
+# or: venv_evolving-art\Scripts\activate  # Windows
 pip install -r requirements.txt  # if available, or install manually
 ```
 
