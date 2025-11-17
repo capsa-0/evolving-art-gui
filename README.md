@@ -33,25 +33,25 @@ This project builds a full graphical application around a genetic-art workflow. 
 
 Game-style interface with population management
 
-![Menu Screen](plots/main_menu.png)
+![Menu Screen](screenshots/main_menu.png)
 
 ### Populations Browser
 
 Manage saved populations with rich metadata
 
-![Populations Screen](plots/populations.png)
+![Populations Screen](screenshots/populations.png)
 
 ### Create Population
 
 Initialize new evolution experiments with custom parameters
 
-![Create Population Screen](plots/create_population.png)
+![Create Population Screen](screenshots/create_population.png)
 
 ### Evolution Screen
 
 Multi-select grid with live previews, inspector panel, and mutation controls
 
-![Evolution Screen](plots/evolve.png)
+![Evolution Screen](screenshots/evolve.png)
 
 ---
 
@@ -112,9 +112,10 @@ This fork includes an entirely reworked rendering stack featuring:
 ## 📦 Saving & Export
 
 * Individuals: **PNG / SVG**
+* Composition Tree **PNG / SVG**
 * Whole generations: **grid export**
 
-Populations are stored under:
+Populations genomes are stored under:
 
 ```
 populations/<name>/history/gen_###.json

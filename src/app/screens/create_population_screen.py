@@ -32,8 +32,8 @@ class CreatePopulationScreen(QWidget):
         super().__init__(parent)
         self.setObjectName("create_population_screen")
 
-        accent = VisualConfig.color_accent
-        accent_hover = QColor(accent).lighter(125).name()
+        self.accent = VisualConfig.color_accent
+        self.accent_hover = QColor(self.accent).lighter(125).name()
         bg_color = "#1a1a1a"
         card_bg = "#202020"
         border_color = "#333333"
@@ -45,14 +45,14 @@ class CreatePopulationScreen(QWidget):
             QPushButton {{
                 font-size: 15px;
                 font-weight: 600;
-                color: {accent};
+                color: {self.accent};
                 background-color: transparent;
-                border: 2px solid {accent};
+                border: 2px solid {self.accent};
                 border-radius: 8px;
                 padding: 10px 22px;
             }}
             QPushButton:hover {{
-                background-color: {accent_hover};
+                background-color: {self.accent_hover};
                 color: #111;
             }}
             """
@@ -63,15 +63,15 @@ class CreatePopulationScreen(QWidget):
             QPushButton {{
                 font-size: 13px;
                 font-weight: 600;
-                color: {accent};
+                color: {self.accent};
                 background-color: transparent;
-                border: 1px solid {accent};
+                border: 1px solid {self.accent};
                 border-radius: 6px;
                 padding: 6px 16px;
                 min-width: 110px;
             }}
             QPushButton:hover {{
-                background-color: {accent_hover};
+                background-color: {self.accent_hover};
                 color: #111;
             }}
             """
@@ -229,16 +229,16 @@ class CreatePopulationScreen(QWidget):
             ScreenHeader #action_button {{
                 font-size: 15px;
                 font-weight: bold;
-                color: {accent};
+                color: {self.accent};
                 background-color: transparent;
-                border: 2px solid {accent};
+                border: 2px solid {self.accent};
                 border-radius: 8px;
                 padding: 10px 22px;
             }}
 
             ScreenHeader #back_button:hover,
             ScreenHeader #action_button:hover {{
-                background-color: {accent_hover};
+                background-color: {self.accent_hover};
                 color: #111;
             }}
 
@@ -281,7 +281,7 @@ class CreatePopulationScreen(QWidget):
                 padding: 8px 12px;
                 font-size: 15px;
                 color: {text_primary};
-                selection-background-color: {accent};
+                selection-background-color: {self.accent};
                 selection-color: #111;
             }}
 
@@ -372,8 +372,12 @@ class CreatePopulationScreen(QWidget):
                 label = QLabel()
                 label.setFixedSize(image_size, image_size)
                 label.setStyleSheet(
-                    "background-color: #151515; border: 1px solid #2d2d2d; border-radius: 10px;"
+                    f"""
+                    background-color: #151515;
+                    border: 4px solid {self.accent};
+                    """
                 )
+
                 label.setScaledContents(True)
 
                 try:

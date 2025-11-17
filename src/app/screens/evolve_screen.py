@@ -69,7 +69,7 @@ class EvolveScreen(QWidget):
                 font-weight: 600;
                 color: {accent};
                 background-color: transparent;
-                border: 1px solid {accent};
+                border: 2px solid {accent};
                 border-radius: 9px;
                 padding: 9px 20px;
                 min-width: 170px;
@@ -175,15 +175,14 @@ class EvolveScreen(QWidget):
 
             QFrame#evolve_header {{
                 background-color: {bg_color};
-                border-bottom: 1px solid {border_color};
+                border-bottom: 2px solid {border_color};
             }}
 
             QLabel#population_label {{
                 font-size: 16px;
                 font-weight: 600;
                 color: {text_secondary};
-                text-transform: uppercase;
-                letter-spacing: 1px;
+                letter-spacing: 2px;
             }}
 
             QLabel#generation_label {{
@@ -202,7 +201,7 @@ class EvolveScreen(QWidget):
                 font-weight: 700;
                 color: {text_secondary};
                 background-color: #202020;
-                border: 1px dashed {border_color};
+                border: 2px dashed {border_color};
                 border-radius: 12px;
                 padding: 60px;
             }}
@@ -291,11 +290,11 @@ class EvolveScreen(QWidget):
         if not pop:
             return
 
-                                                                   
+        self.status_message.emit(f"Rendering {len(pop)} individuals in parallel...", 1000)
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        QApplication.processEvents()
         
-                                                                    
-        image_payloads = self.backend.render_all_previews_parallel() 
+        image_payloads = self.backend.render_all_previews_parallel(use_cache=True) 
 
         QApplication.restoreOverrideCursor()
 
@@ -444,7 +443,7 @@ class EvolveScreen(QWidget):
         try:
             self.backend.evolve(self.selected_indices)
             
-            self.generation += 1
+            self.generation = self.backend.generation
             self.lbl_gen.setText(f"Gen: {self.generation}")
             self.inspector_panel.set_generation(self.generation)
             

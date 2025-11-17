@@ -452,13 +452,49 @@ def render_tree_png_bytes(
         buffer.close()
 
 
+def render_tree_svg_bytes(
+    composition_dict: dict,
+    accent_color: str = "#4e9cff",
+) -> bytes:
+    """Render a composition dictionary to SVG bytes with transparent background."""
+    if not composition_dict:
+        return b""
+
+    root = _parse_tree(composition_dict)
+    _assign_positions(root)
+
+    fig, canvas = _draw_tree(root, accent_color=accent_color)
+    canvas.draw()
+    buffer = io.BytesIO()
+    try:
+        fig.savefig(
+            buffer,
+            format="svg",
+            bbox_inches="tight",
+            transparent=True,
+            pad_inches=0.1
+        )
+        return buffer.getvalue()
+    finally:
+        buffer.close()
+
+
 def save_tree_image(
     composition_dict: dict,
     output_path: str,
     dpi: int = 300,
     accent_color: str = "#4e9cff",
+    format: Optional[str] = None,
 ) -> None:
-    """Render a composition tree and save it to disk."""
+    """Render a composition tree and save it to disk.
+    
+    Args:
+        composition_dict: The composition dictionary to render
+        output_path: Path where to save the file
+        dpi: DPI for PNG output (ignored for SVG)
+        accent_color: Color for edges and highlights
+        format: 'png' or 'svg'. If None, inferred from output_path extension
+    """
     if not composition_dict:
         return
 
@@ -466,4 +502,25 @@ def save_tree_image(
     _assign_positions(root)
     fig, canvas = _draw_tree(root, accent_color=accent_color)
     canvas.draw()
-    fig.savefig(output_path, dpi=dpi, bbox_inches="tight", facecolor=fig.get_facecolor())
+    
+    if format is None:
+        format = output_path.lower().split('.')[-1]
+    
+    format = format.lower()
+    
+    if format == 'svg':
+        fig.savefig(
+            output_path,
+            format='svg',
+            bbox_inches='tight',
+            transparent=True,
+            pad_inches=0.1
+        )
+    else:
+        fig.savefig(
+            output_path,
+            format='png',
+            dpi=dpi,
+            bbox_inches='tight',
+            facecolor=fig.get_facecolor()
+        )

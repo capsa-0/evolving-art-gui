@@ -24,8 +24,16 @@ def render_tree_to_pixmap(composition_dict: dict, dpi: int = 150) -> QPixmap:
     return QPixmap.fromImage(q_image)
 
 
-def save_tree_to_file(composition_dict: dict, out_path: str, dpi: int = 300) -> None:
-    """Render and persist a composition tree to disk."""
+def save_tree_to_file(composition_dict: dict, out_path: str, dpi: int = 300, format: str = None) -> None:
+    """Render and persist a composition tree to disk.
+    
+    Args:
+        composition_dict: The composition dictionary to render
+        out_path: Path where to save the file
+        dpi: DPI for PNG output (ignored for SVG)
+        format: 'png' or 'svg'. If None, inferred from out_path extension.
+                SVG will be saved with transparent background.
+    """
     if not composition_dict:
         return
 
@@ -35,6 +43,7 @@ def save_tree_to_file(composition_dict: dict, out_path: str, dpi: int = 300) -> 
             output_path=out_path,
             dpi=dpi,
             accent_color=VisualConfig.color_accent,
+            format=format,
         )
     except Exception as exc:
         print(f"Error saving tree: {exc}")

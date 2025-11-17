@@ -8,7 +8,7 @@ from .vectorizer import (
  render_to_file,
  render_population_grid,
 )
-from .tree_renderer import render_tree_png_bytes, save_tree_image
+from .tree_renderer import render_tree_png_bytes, render_tree_svg_bytes, save_tree_image
 
 __all__ = [
  "draw_genome_on_axis",
@@ -18,5 +18,6 @@ __all__ = [
  "render_to_file",
  "render_population_grid",
  "render_tree_png_bytes",
+ "render_tree_svg_bytes",
  "save_tree_image",
 ]

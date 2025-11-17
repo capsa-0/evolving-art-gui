@@ -67,40 +67,60 @@ class InspectorWidget(QFrame):
         self.lbl_tree_image.setMinimumHeight(300)
         self.lbl_tree_image.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lbl_tree_image.setStyleSheet(
-            "background-color: #121212; border: 1px solid #2a2a2a; border-radius: 12px; "
-            "color: #777; margin-top: 12px; padding: 12px;"
+            "background-color: #2d2d2d; border: 2px solid #2a2a2a; border-radius: 12px; "
+            "color: #777; margin-top: 12px; padding: 0px;"
         )
 
-        self.btn_save_tree = QPushButton("Save Tree (PNG)")
-        self.btn_save_tree.setEnabled(False)
-        self.btn_save_tree.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.btn_save_tree.setStyleSheet(
-            f"""
+        tree_buttons_layout = QVBoxLayout()
+        tree_buttons_layout.setSpacing(8)
+        
+        tree_save_label = QLabel("Save Tree:")
+        tree_save_label.setStyleSheet(f"color: {text_secondary}; font-size: 12px; margin-top: 8px;")
+        tree_buttons_layout.addWidget(tree_save_label)
+        
+        from PySide6.QtWidgets import QHBoxLayout
+        tree_buttons_row = QHBoxLayout()
+        tree_buttons_row.setSpacing(8)
+        
+        tree_btn_style = f"""
             QPushButton {{
-                font-size: 13px;
-                font-weight: 600;
+                font-size: 11px;
+                font-weight: bold;
                 color: {accent};
                 background-color: transparent;
                 border: 1px solid {accent};
-                border-radius: 8px;
-                padding: 8px 18px;
-                margin-top: 8px;
+                border-radius: 6px;
+                padding: 6px 16px;
             }}
             QPushButton:hover {{
-                background-color: {accent_hover};
+                background-color: {accent};
                 color: #111;
             }}
             QPushButton:disabled {{
                 border-color: #303030;
                 color: #555;
             }}
-            """
-        )
-        self.btn_save_tree.clicked.connect(self._handle_save_tree)
+        """
+        
+        self.btn_save_tree_png = QPushButton("PNG")
+        self.btn_save_tree_png.setEnabled(False)
+        self.btn_save_tree_png.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.btn_save_tree_png.setStyleSheet(tree_btn_style)
+        self.btn_save_tree_png.clicked.connect(lambda: self._handle_save_tree("png"))
+        
+        self.btn_save_tree_svg = QPushButton("SVG")
+        self.btn_save_tree_svg.setEnabled(False)
+        self.btn_save_tree_svg.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.btn_save_tree_svg.setStyleSheet(tree_btn_style)
+        self.btn_save_tree_svg.clicked.connect(lambda: self._handle_save_tree("svg"))
+        
+        tree_buttons_row.addWidget(self.btn_save_tree_png)
+        tree_buttons_row.addWidget(self.btn_save_tree_svg)
+        tree_buttons_layout.addLayout(tree_buttons_row)
 
         tree_layout.addLayout(ind_stats_form)
         tree_layout.addWidget(self.lbl_tree_image)
-        tree_layout.addWidget(self.btn_save_tree)
+        tree_layout.addLayout(tree_buttons_layout)
         inspector_group.setLayout(tree_layout)
 
         self.mutation_panel = MutationPanel()
@@ -118,7 +138,7 @@ class InspectorWidget(QFrame):
                 font-weight: 600;
                 color: {accent};
                 background-color: transparent;
-                border: 1px solid {accent};
+                border: 2px solid {accent};
                 border-radius: 8px;
                 padding: 8px 18px;
                 margin: 6px 0;
@@ -145,14 +165,14 @@ class InspectorWidget(QFrame):
             f"""
             QFrame#inspector_panel {{
                 background-color: {bg_color};
-                border-left: 1px solid {border_color};
+                border-left: 2px solid {border_color};
             }}
 
             QGroupBox {{
                 color: {text_primary};
                 font-size: 15px;
                 font-weight: 700;
-                border: 1px solid {border_color};
+                border: 2px solid {border_color};
                 border-radius: 12px;
                 margin-top: 12px;
                 padding: 14px;
@@ -165,7 +185,7 @@ class InspectorWidget(QFrame):
                 color: {text_primary};
                 font-size: 15px;
                 text-transform: uppercase;
-                letter-spacing: 1px;
+                letter-spacing: 2px;
             }}
 
             QLabel {{
@@ -213,10 +233,12 @@ class InspectorWidget(QFrame):
                     Qt.TransformationMode.SmoothTransformation,
                 )
                 self.lbl_tree_image.setPixmap(scaled_pixmap)
-                self.btn_save_tree.setEnabled(True)
+                self.btn_save_tree_png.setEnabled(True)
+                self.btn_save_tree_svg.setEnabled(True)
             else:
                 self.lbl_tree_image.setText(f"Error: No composition data for #{index}.")
-                self.btn_save_tree.setEnabled(False)
+                self.btn_save_tree_png.setEnabled(False)
+                self.btn_save_tree_svg.setEnabled(False)
 
         except Exception as e:
             print(f"Error in InspectorWidget.update_inspector: {e}")
@@ -229,11 +251,11 @@ class InspectorWidget(QFrame):
         self.lbl_inspector_size.setText("N/A")
         self.lbl_tree_image.setText("Select an individual to view its tree.")
         self.lbl_tree_image.setPixmap(QPixmap())
-        self.btn_save_tree.setEnabled(False)
+        self.btn_save_tree_png.setEnabled(False)
+        self.btn_save_tree_svg.setEnabled(False)
 
-    def _handle_save_tree(self):
-                                                   
-                                                                          
+    def _handle_save_tree(self, fmt="png"):
+        """Save tree in specified format (png or svg)."""
         text = self.lbl_inspector_index.text()
         if not text.startswith("#"):
             return
@@ -242,15 +264,17 @@ class InspectorWidget(QFrame):
         except ValueError:
             return
 
-        self.status_message.emit(f"Saving tree for individual #{index}...", 2000)
+        fmt_upper = fmt.upper()
+        self.status_message.emit(f"Saving tree as {fmt_upper} for individual #{index}...", 2000)
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         try:
             comp_dict = self.backend.get_individual_composition_dict(index)
             if comp_dict:
                 folder = self.backend.dirs["saves"]
-                filename = f"tree_gen_{self.generation}_ind_{index}_tree.png"
+                filename = f"tree_gen_{self.generation}_ind_{index}_tree.{fmt}"
                 full_path = os.path.join(folder, filename)
-                TreeViz.save_tree_to_file(comp_dict, full_path)
+
+                TreeViz.save_tree_to_file(comp_dict, full_path, format=fmt)
                 self.status_message.emit(f"Saved: {os.path.basename(full_path)}", 4000)
         except Exception as e:
             self.status_message.emit(f"Error saving tree: {str(e)}", 4000)

@@ -1,5 +1,8 @@
 """BackendAdapter: Facade composing PopulationIO, PopulationStateManager, and rendering helpers."""
 import os
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from functools import lru_cache
+import multiprocessing
 
 from src.rendering import genome_to_png_bytes, save_genome_as_png, save_genome_as_svg
 
@@ -8,6 +11,12 @@ from .population_state_manager import PopulationStateManager
 
 GUI_IMAGE_RES = 250
 GUI_HQ_RES = 1200
+
+
+def _render_single_genome(args):
+    """Helper function for parallel rendering (must be at module level for pickling)."""
+    genome, resolution = args
+    return genome_to_png_bytes(genome, resolution=resolution)
 
 
 class BackendAdapter:
@@ -24,6 +33,8 @@ class BackendAdapter:
         self.pop_name = ""
         self.generation = 0
         self.dirs = {}
+        self._image_cache = {} 
+        self._max_workers = max(1, multiprocessing.cpu_count() - 1)
 
     @property
     def population(self):
@@ -74,14 +85,51 @@ class BackendAdapter:
 
     def evolve(self, selected_indices):
         """Evolve population to next generation."""
-        return self.pop_state.evolve(selected_indices)
+        old_gens = [g for g in set(k[0] for k in self._image_cache.keys()) if g < self.generation - 2]
+        for old_gen in old_gens:
+            keys_to_remove = [k for k in self._image_cache.keys() if k[0] == old_gen]
+            for key in keys_to_remove:
+                del self._image_cache[key]
+        
+        result = self.pop_state.evolve(selected_indices)
+        self.generation += 1
+        return result
 
-    def render_all_previews_parallel(self):
+    def render_all_previews_parallel(self, use_cache=True):
         """Render all population individuals in parallel and return PNG bytes."""
-        return [
-            genome_to_png_bytes(genome, resolution=GUI_IMAGE_RES)
-            for genome in self.pop_state.population
-        ]
+        if use_cache:
+            cached_results = []
+            for idx, genome in enumerate(self.pop_state.population):
+                cache_key = (self.generation, idx)
+                if cache_key in self._image_cache:
+                    cached_results.append(self._image_cache[cache_key])
+                else:
+                    cached_results.append(None)
+            
+            if all(img is not None for img in cached_results):
+                return cached_results
+        
+        results = [None] * len(self.pop_state.population)
+        
+        with ProcessPoolExecutor(max_workers=self._max_workers) as executor:
+            future_to_idx = {
+                executor.submit(_render_single_genome, (genome, GUI_IMAGE_RES)): idx
+                for idx, genome in enumerate(self.pop_state.population)
+            }
+            
+            for future in as_completed(future_to_idx):
+                idx = future_to_idx[future]
+                try:
+                    img_bytes = future.result()
+                    results[idx] = img_bytes
+                    if use_cache:
+                        cache_key = (self.generation, idx)
+                        self._image_cache[cache_key] = img_bytes
+                except Exception as e:
+                    print(f"Error rendering genome {idx}: {e}")
+                    results[idx] = b""
+        
+        return results
 
     def save_hq_individual(self, index, generation, fmt="png"):
         """Save an individual in high quality."""

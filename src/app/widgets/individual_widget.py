@@ -19,7 +19,7 @@ class IndividualWidget(QFrame):
         self.DEFAULT_BORDER = "#3d3d3d"
         self.DEFAULT_TEXT = "#888"
         
-        self.setFixedSize(220, 270)
+        self.setFixedSize(228, 270)
         self.setStyleSheet(f"""
             QFrame {{ 
                 background-color: #2d2d2d; 
@@ -29,11 +29,11 @@ class IndividualWidget(QFrame):
         """)
         
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(5, 5, 5, 5)
+        layout.setContentsMargins(10, 0, 10, 5)
         layout.setSpacing(5)
         
         self.img_label = QLabel()
-        self.img_label.setFixedSize(206, 206)
+        self.img_label.setFixedSize(204, 204)
         self.img_label.setPixmap(pixmap)
         self.img_label.setScaledContents(True)
         self.img_label.setStyleSheet("border: none; border-radius: 4px; background-color: transparent;")

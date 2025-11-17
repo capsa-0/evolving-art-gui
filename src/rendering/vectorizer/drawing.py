@@ -27,45 +27,21 @@ def draw_genome_on_axis(ax: Axes, genome: Any) -> None:
         ax.axis('off')
         return
 
-    import shapely.ops
-
-                                                                           
-                                                                            
     cleaned = []
     for g in all_geoms:
         try:
-            g2 = None
-            if not getattr(g, 'is_valid', True):
-                try:
-                    g2 = g.buffer(0)
-                except Exception:
-                    g2 = None
-            else:
-                g2 = g
-
-            if g2 is not None and not g2.is_empty and getattr(g2, 'area', 0) > 0:
-                cleaned.append(g2)
+            if getattr(g, 'is_valid', True) and not g.is_empty and getattr(g, 'area', 0) > 0:
+                cleaned.append(g)
         except Exception:
             pass
 
-                                                                     
-                                                      
     try:
         if cleaned:
-            mins_x = []
-            mins_y = []
-            maxs_x = []
-            maxs_y = []
-            for g in cleaned:
-                bx0, by0, bx1, by1 = g.bounds
-                mins_x.append(bx0)
-                mins_y.append(by0)
-                maxs_x.append(bx1)
-                maxs_y.append(by1)
-            minx = min(mins_x)
-            miny = min(mins_y)
-            maxx = max(maxs_x)
-            maxy = max(maxs_y)
+            bounds_list = [g.bounds for g in cleaned]
+            minx = min(b[0] for b in bounds_list)
+            miny = min(b[1] for b in bounds_list)
+            maxx = max(b[2] for b in bounds_list)
+            maxy = max(b[3] for b in bounds_list)
         else:
             raise ValueError("no geoms")
     except Exception:
@@ -173,9 +149,9 @@ def save_genome_as_png(
     resolution: int = 128,
 ) -> Optional[Image.Image]:
     """Save a genome as PNG or return PIL Image."""
-    DPI_CALC = resolution / 3.0
+    DPI_CALC = resolution / 2.5
 
-    fig = Figure(figsize=(3, 3))
+    fig = Figure(figsize=(2.5, 2.5))
     canvas = FigureCanvas(fig)
     ax = fig.add_subplot(1, 1, 1)
 
@@ -233,7 +209,7 @@ def genome_to_png_bytes(genome: Any, resolution: int = 128) -> bytes:
     if image is None:
         return b""
     buffer = io.BytesIO()
-    image.save(buffer, format="PNG")
+    image.save(buffer, format="PNG", optimize=False, compress_level=1)
     return buffer.getvalue()
 
 
