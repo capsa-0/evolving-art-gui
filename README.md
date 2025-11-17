@@ -1,57 +1,54 @@
 # 🎨 Evolving Art — Interactive GUI Edition
 
-An interactive desktop application for evolving generative artwork through guided selection.
+An interactive desktop application for evolving generative artwork through guided visual selection.
 
-This project builds a full graphical application around a genetic-art workflow. It uses the evolutionary engine from the original project (`src/core/`), but the rendering, visualization, and all GUI components have been rewritten and expanded.
+This project extends the original *evolving-art* engine with a full graphical experience. While the core evolutionary logic is inherited, the rendering system, interface, export utilities, and workflow have been redesigned for hands-on creative exploration.
 
-> Fork of: [https://github.com/gianluccacolangelo/evolving-art](https://github.com/gianluccacolangelo/evolving-art)
->
-> ✔ Evolution logic reused
-> ❌ Rendering not reused
-> ❌ CLI workflow replaced with a full GUI
+> Fork of the original project:  
+> **https://github.com/gianluccacolangelo/evolving-art**
 
 ---
 
-## ✨ What This Version Adds
+## ✨ Improvements in This Fork
 
-| Component                                              | Original Project |                This Fork                |
-| ------------------------------------------------------ | :--------------: | :-------------------------------------: |
-| Evolution engine (genome, mutation, composition logic) |         ✅        |              **Inherited**              |
-| Command-line workflow                                  |         ✅        |                    ❌                    |
-| Rendering system                                       |       Basic      | **Rewritten (vector + raster engines)** |
-| GUI (PySide6 desktop app)                              |         ❌        |                 **New**                 |
-| Population browser & metadata                          |         ❌        |                 **New**                 |
-| Live mutation controls                                 |         ❌        |                 **New**                 |
-| Interactive selection-based evolution                  |       Basic      |               **Enhanced**              |
-| PNG/SVG export + generation grids                      |         Basic        |                 **Enhanced**     |
+| Feature / System                                  | Original | This Fork |
+|--------------------------------------------------|:--------:|:---------:|
+| Evolution engine (genome + mutation logic)        |   ✅     | **Inherited** |
+| Rendering pipeline                                 | Basic    | **Fully rewritten vector engine** |
+| Workflow                                          | CLI      | **Interactive GUI (PySide6)** |
+| Population inspector + metadata                   | ❌       | **Added** |
+| Live mutation + inspector controls                | ❌       | **Added** |
+| Interactive multi-selection evolution             | Basic    | **Enhanced** |
+| Export (individual + population + tree)           | Basic    | **Full PNG/SVG export system** |
+
+---
+
+## 🧪 Example Output
+
+This fork introduces enhanced export tools for documenting evolution. The population view and genome tree can be exported in high resolution as **PNG or SVG**.
+
+### Population Grid Example
+
+![Example Population](results/gallery/parrots.png)
+
+> Each numbered cell represents an evolved candidate. The user selects preferred individuals, and the system generates the next generation based on their selection.
+
+### Genome Composition Tree Example
+
+![Composition Tree](results/gallery/parrot_1_tree.png)
+
+> The composition tree visualizes the underlying genome used to generate the selected artwork, allowing inspection, debugging, or creative manipulation.
 
 ---
 
 ## 🖥 Screenshots
 
-### Menu Screen
-
-Game-style interface with population management
-
-![Menu Screen](screenshots/main_menu.png)
-
-### Populations Browser
-
-Manage saved populations with rich metadata
-
-![Populations Screen](screenshots/populations.png)
-
-### Create Population
-
-Initialize new evolution experiments with custom parameters
-
-![Create Population Screen](screenshots/create_population.png)
-
-### Evolution Screen
-
-Multi-select grid with live previews, inspector panel, and mutation controls
-
-![Evolution Screen](screenshots/evolve.png)
+| Screen | Preview |
+|--------|---------|
+| **Main Menu** | ![Menu](results/screenshots/main_menu.png) |
+| **Population Browser** | ![Populations](results/screenshots/populations.png) |
+| **Create Population** | ![Create Population](results/screenshots/create_population.png) |
+| **Evolution Workspace** | ![Evolution Screen](results/screenshots/evolve.png) |
 
 ---
 
@@ -60,8 +57,8 @@ Multi-select grid with live previews, inspector panel, and mutation controls
 ```bash
 conda env create -f environment.yml
 conda activate evolving-art
-
 python main.py
+
 ```
 
 ---

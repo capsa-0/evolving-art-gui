@@ -1,11 +1,11 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QMessageBox, QInputDialog, QLineEdit
+from PySide6.QtWidgets import QVBoxLayout, QMessageBox, QInputDialog, QLineEdit
 from PySide6.QtCore import Signal
-from src.app.theme import VisualConfig
 
+from .common import StyledScreen
 from ..widgets.screen_header import ScreenHeader
 from ..widgets.populations_list import PopulationsList
 
-class PopulationsScreen(QWidget):
+class PopulationsScreen(StyledScreen):
     """Screen that manages the list of populations. Uses ScreenHeader and PopulationsList widgets.
     """
 
@@ -17,16 +17,6 @@ class PopulationsScreen(QWidget):
         super().__init__(parent)
         self.backend = backend_adapter
 
-                               
-        BG_COLOR = "#1a1a1a"
-        PRIMARY_TEXT_COLOR = "#ffffff"
-        SECONDARY_TEXT_COLOR = "#aaaaaa"
-        TERTIARY_TEXT_COLOR = "#777777"
-        BORDER_COLOR = "#333"
-        
-        ACCENT_COLOR = VisualConfig.color_accent
-
-                                                              
         self.setObjectName("populations_screen")
 
         main_layout = QVBoxLayout(self)
@@ -48,15 +38,21 @@ class PopulationsScreen(QWidget):
 
                                                
                                
+        BORDER_COLOR = "#333"
+        PRIMARY_TEXT_COLOR = "#ffffff"
+        SECONDARY_TEXT_COLOR = "#aaaaaa"
+        TERTIARY_TEXT_COLOR = "#777777"
+        ACCENT_COLOR = self.palette.accent
+
         self.setStyleSheet(f"""
             /* --- Root Screen --- */
             #populations_screen {{
-                background-color: {BG_COLOR};
+                background-color: {self.palette.background};
             }}
 
             /* --- Header Widget --- */
             ScreenHeader {{
-                background-color: {BG_COLOR};
+                background-color: {self.palette.background};
                 border-bottom: 2px solid {BORDER_COLOR}; 
             }}
             
@@ -121,7 +117,7 @@ class PopulationsScreen(QWidget):
             /* --- Scrollbar --- */
             QScrollBar:vertical {{
                 border: none;
-                background: {BG_COLOR}; 
+                background: {self.palette.background}; 
                 width: 14px;
                 margin: 0px 0px 0px 0px;
             }}
@@ -129,7 +125,7 @@ class PopulationsScreen(QWidget):
                 background: {TERTIARY_TEXT_COLOR};
                 min-height: 20px;
                 border-radius: 7px;
-                border: 3px solid {BG_COLOR}; 
+                border: 3px solid {self.palette.background}; 
             }}
             QScrollBar::handle:vertical:hover {{
                 background: {SECONDARY_TEXT_COLOR};

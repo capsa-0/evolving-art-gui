@@ -19,10 +19,11 @@ from PySide6.QtGui import QPixmap, QColor
 
 from src.core.evolution import GAConfig, initialize_population
 from src.rendering import save_genome_as_png
-from src.app.theme import VisualConfig
+from .common import StyledScreen, build_outline_button_style, build_secondary_button_style
 from ..widgets.screen_header import ScreenHeader
 
-class CreatePopulationScreen(QWidget):
+
+class CreatePopulationScreen(StyledScreen):
     """Population creation screen styled consistently with other top-level views."""
 
     population_created = Signal(dict)
@@ -32,49 +33,25 @@ class CreatePopulationScreen(QWidget):
         super().__init__(parent)
         self.setObjectName("create_population_screen")
 
-        self.accent = VisualConfig.color_accent
-        self.accent_hover = QColor(self.accent).lighter(125).name()
-        bg_color = "#1a1a1a"
         card_bg = "#202020"
         border_color = "#333333"
-        text_primary = "#f0f0f0"
-        text_secondary = "#b0b0b0"
+        text_primary = self.palette.primary_text
+        text_secondary = self.palette.secondary_text
 
-        outline_button_style = (
-            f"""
-            QPushButton {{
-                font-size: 15px;
-                font-weight: 600;
-                color: {self.accent};
-                background-color: transparent;
-                border: 2px solid {self.accent};
-                border-radius: 8px;
-                padding: 10px 22px;
-            }}
-            QPushButton:hover {{
-                background-color: {self.accent_hover};
-                color: #111;
-            }}
-            """
+        outline_button_style = build_outline_button_style(
+            self.palette,
+            font_size="15px",
+            font_weight="600",
+            padding="10px 22px",
+            radius=8,
         )
 
-        secondary_button_style = (
-            f"""
-            QPushButton {{
-                font-size: 13px;
-                font-weight: 600;
-                color: {self.accent};
-                background-color: transparent;
-                border: 1px solid {self.accent};
-                border-radius: 6px;
-                padding: 6px 16px;
-                min-width: 110px;
-            }}
-            QPushButton:hover {{
-                background-color: {self.accent_hover};
-                color: #111;
-            }}
-            """
+        secondary_button_style = build_secondary_button_style(
+            self.palette,
+            padding="6px 16px",
+            radius=6,
+            font_size="13px",
+            font_weight="600",
         )
 
         main_layout = QVBoxLayout(self)
@@ -145,6 +122,7 @@ class CreatePopulationScreen(QWidget):
         self.btn_random_seed = QPushButton("Random")
         self.btn_random_seed.setCursor(Qt.CursorShape.PointingHandCursor)
         self.btn_random_seed.setStyleSheet(secondary_button_style)
+        self.btn_random_seed.setMinimumWidth(110)
         self.btn_random_seed.clicked.connect(self._generate_random_seed)
         seed_row_layout.addWidget(self.btn_random_seed)
         add_field_block("Seed", seed_row_widget)
@@ -210,11 +188,11 @@ class CreatePopulationScreen(QWidget):
         self.setStyleSheet(
             f"""
             #create_population_screen {{
-                background-color: {bg_color};
+                background-color: {self.palette.background};
             }}
 
             ScreenHeader {{
-                background-color: {bg_color};
+                background-color: {self.palette.background};
                 border-bottom: 2px solid {border_color};
             }}
 
@@ -229,16 +207,16 @@ class CreatePopulationScreen(QWidget):
             ScreenHeader #action_button {{
                 font-size: 15px;
                 font-weight: bold;
-                color: {self.accent};
+                color: {self.palette.accent};
                 background-color: transparent;
-                border: 2px solid {self.accent};
+                border: 2px solid {self.palette.accent};
                 border-radius: 8px;
                 padding: 10px 22px;
             }}
 
             ScreenHeader #back_button:hover,
             ScreenHeader #action_button:hover {{
-                background-color: {self.accent_hover};
+                background-color: {self.palette.hover()};
                 color: #111;
             }}
 
@@ -281,7 +259,7 @@ class CreatePopulationScreen(QWidget):
                 padding: 8px 12px;
                 font-size: 15px;
                 color: {text_primary};
-                selection-background-color: {self.accent};
+                selection-background-color: {self.palette.accent};
                 selection-color: #111;
             }}
 
@@ -374,7 +352,7 @@ class CreatePopulationScreen(QWidget):
                 label.setStyleSheet(
                     f"""
                     background-color: #151515;
-                    border: 4px solid {self.accent};
+                    border: 4px solid {self.palette.accent};
                     """
                 )
 

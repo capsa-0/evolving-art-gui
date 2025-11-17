@@ -10,11 +10,11 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QPixmap, QColor
 
-from src.app.theme import VisualConfig
+from .common import StyledScreen, build_primary_button_style, build_outline_button_style
 from ..widgets.individual_widget import IndividualWidget
 from ..widgets.inspector_widget import InspectorWidget
 
-class EvolveScreen(QWidget):
+class EvolveScreen(StyledScreen):
     """
     Main evolution screen with multi-selection support and an inspector panel.
     """
@@ -32,58 +32,15 @@ class EvolveScreen(QWidget):
         self.selected_indices = set()
         self.current_selected_index = None
 
-        accent = VisualConfig.color_accent
-        accent_hover = QColor(accent).lighter(125).name()
-        bg_color = "#1a1a1a"
-        panel_bg = "#191919"
-        border_color = "#2d2d2d"
-        text_primary = "#f0f0f0"
-        text_secondary = "#b0b0b0"
+        palette = self.palette
+        bg_color = palette.background
+        panel_bg = palette.panel_background
+        border_color = palette.border
+        text_primary = palette.primary_text
+        text_secondary = palette.secondary_text
 
-        primary_button_style = (
-            f"""
-            QPushButton {{
-                font-size: 15px;
-                font-weight: 700;
-                color: #111;
-                background-color: {accent};
-                border: none;
-                border-radius: 10px;
-                padding: 10px 26px;
-                min-width: 200px;
-            }}
-            QPushButton:hover {{
-                background-color: {accent_hover};
-            }}
-            QPushButton:disabled {{
-                background-color: #333;
-                color: #666;
-            }}
-            """
-        )
-
-        outline_button_style = (
-            f"""
-            QPushButton {{
-                font-size: 14px;
-                font-weight: 600;
-                color: {accent};
-                background-color: transparent;
-                border: 2px solid {accent};
-                border-radius: 9px;
-                padding: 9px 20px;
-                min-width: 170px;
-            }}
-            QPushButton:hover {{
-                background-color: {accent_hover};
-                color: #111;
-            }}
-            QPushButton:disabled {{
-                border-color: #3a3a3a;
-                color: #555;
-            }}
-            """
-        )
+        primary_button_style = build_primary_button_style(palette)
+        outline_button_style = build_outline_button_style(palette, radius=9, padding="9px 20px")
 
         self.setObjectName("evolve_screen")
 
@@ -146,7 +103,7 @@ class EvolveScreen(QWidget):
         self.grid_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         
                                             
-        self.loading_label = QLabel("Generating next generation...")
+        self.loading_label = QLabel("Evolving Population...")
         self.loading_label.setObjectName("loading_label")
         self.loading_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.loading_label.hide()
@@ -265,9 +222,6 @@ class EvolveScreen(QWidget):
         """
         Clear the grid and redraw it by asking the backend to render all previews in parallel.
         """
-                              
-        self.loading_label.hide()
-
                                                
         widgets_to_delete = []
         for i in reversed(range(self.grid_layout.count())): 
@@ -293,6 +247,9 @@ class EvolveScreen(QWidget):
         self.status_message.emit(f"Rendering {len(pop)} individuals in parallel...", 1000)
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         QApplication.processEvents()
+        
+        for idx in range(len(pop)):
+            self.backend._image_cache.pop((self.backend.generation, idx), None)
         
         image_payloads = self.backend.render_all_previews_parallel(use_cache=True) 
 
@@ -450,6 +407,7 @@ class EvolveScreen(QWidget):
             self.backend.save_generation_state(self.generation)
 
             self.render_population_grid()                               
+            self.loading_label.hide()
             self.update_population_stats()
             self.inspector_panel.clear_inspector()
             
@@ -459,6 +417,7 @@ class EvolveScreen(QWidget):
             self.btn_prev_gen.setEnabled(self.generation > 0)
         except Exception as e:
                                                                  
+            self.loading_label.hide()
             self.status_message.emit(f"Error during evolution: {e}", 6000)
             print(f"Error during evolution: {e}")
         finally:

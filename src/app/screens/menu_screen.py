@@ -1,9 +1,10 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QFrame
+from PySide6.QtWidgets import QVBoxLayout, QLabel, QPushButton, QFrame
 from PySide6.QtCore import Signal, Qt
 
-from src.app.theme import VisualConfig
+from .common import StyledScreen, build_outline_button_style
 
-class MenuScreen(QWidget):
+
+class MenuScreen(StyledScreen):
     """Main menu screen styled after a modern video game."""
                                 
     populations_requested = Signal()              
@@ -11,17 +12,6 @@ class MenuScreen(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-
-                                   
-        BG_COLOR = "#1a1a1a"
-        PRIMARY_TEXT_COLOR = "#ffffff"
-        SECONDARY_TEXT_COLOR = "#ffffff"
-        TERTIARY_TEXT_COLOR = "#aaaaaa"
-
-        ACCENT_COLOR = VisualConfig.color_accent                               
-
-                                   
-        self.setStyleSheet(f"background-color: {BG_COLOR};")
 
                              
         main_layout = QVBoxLayout(self)
@@ -34,7 +24,7 @@ class MenuScreen(QWidget):
         title.setStyleSheet(f"""
             font-size: 120px; 
             font-weight: 900; 
-            color: {ACCENT_COLOR}; 
+            color: {self.palette.accent}; 
             margin-bottom: 10px;
             background-color: transparent;
         """)
@@ -43,7 +33,7 @@ class MenuScreen(QWidget):
         subtitle = QLabel("Interactive Genetic Art Studio")
         subtitle.setStyleSheet(f"""
             font-size: 20px; 
-            color: {SECONDARY_TEXT_COLOR}; 
+            color: {self.palette.primary_text}; 
             margin-bottom: 30px;
             font-weight: 300; 
             background-color: transparent;
@@ -65,29 +55,20 @@ class MenuScreen(QWidget):
         description = QLabel("A tool to evolve artwork through guided selection.")
         description.setStyleSheet(f"""
             font-size: 16px; 
-            color: {TERTIARY_TEXT_COLOR}; 
+            color: {self.palette.tertiary_text}; 
             margin-bottom: 40px;
         """)
         description.setAlignment(Qt.AlignmentFlag.AlignCenter)
         description.setWordWrap(True)
 
                                                       
-        button_style = f"""
-            QPushButton {{
-                font-size: 20px; 
-                font-weight: bold;
-                color: {ACCENT_COLOR}; 
-                background-color: transparent; 
-                border: 2px solid {ACCENT_COLOR}; 
-                border-radius: 8px;
-                padding: 10px;
-                min-height: 65px;
-            }}
-            QPushButton:hover {{
-                background-color: {ACCENT_COLOR}; 
-                color: #111; 
-            }}
-        """
+        button_style = build_outline_button_style(
+            self.palette,
+            font_size="20px",
+            font_weight="700",
+            padding="10px",
+            radius=8,
+        )
 
                          
         

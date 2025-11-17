@@ -226,12 +226,13 @@ class InspectorWidget(QFrame):
 
             if comp_dict:
                 pixmap = TreeViz.render_tree_to_pixmap(comp_dict)
+            
                 scaled_pixmap = pixmap.scaled(
-                    self.lbl_tree_image.width() - 10,
-                    400,
+                    self.lbl_tree_image.size(), 
                     Qt.AspectRatioMode.KeepAspectRatio,
                     Qt.TransformationMode.SmoothTransformation,
                 )
+
                 self.lbl_tree_image.setPixmap(scaled_pixmap)
                 self.btn_save_tree_png.setEnabled(True)
                 self.btn_save_tree_svg.setEnabled(True)
