@@ -82,7 +82,7 @@ Everything is saved automatically, including metadata and full lineage.
 ```
 src/
  ├─ core/                    # Evolution engine (from original repo)
- ├─ rendering/              # New rendering pipeline (vectorizer + rasterizer)
+ ├─ rendering/              # New rendering pipeline
  ├─ app/                    # PySide6 GUI (screens, widgets, theme)
  ├─ population_manager/     # Persistence, metadata, autosave, history
 main.py                     # Entry point
