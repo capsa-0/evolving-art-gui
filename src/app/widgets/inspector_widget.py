@@ -9,7 +9,7 @@ from ..widgets.mutation_panel import MutationPanel
 from ..widgets import tree_visualizer as TreeViz
 from ..theme import VisualConfig
 from src.population_manager.backend_adapter import GUI_IMAGE_RES
-from src.rendering.vectorizer.drawing import render_population_grid
+from src.rendering.composition_renderer import render_population_grid
 
 
 class InspectorWidget(QFrame):

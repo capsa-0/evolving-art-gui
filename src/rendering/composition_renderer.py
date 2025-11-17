@@ -9,7 +9,7 @@ from matplotlib.axes import Axes
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-from .geometry import process_node
+from .geometry_utils import process_node
 
 
 def draw_genome_on_axis(ax: Axes, genome: Any) -> None:

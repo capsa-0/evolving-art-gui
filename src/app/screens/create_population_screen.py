@@ -18,7 +18,7 @@ from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QPixmap, QColor
 
 from src.core.evolution import GAConfig, initialize_population
-from src.rendering.vectorizer import save_genome_as_png
+from src.rendering import save_genome_as_png
 from src.app.theme import VisualConfig
 from ..widgets.screen_header import ScreenHeader
 

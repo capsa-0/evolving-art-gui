@@ -22,7 +22,7 @@ from shapely.geometry import GeometryCollection, MultiPolygon, Polygon as Shapel
 from shapely.geometry.base import BaseGeometry
 
 from src.core.evolution.genome import PrimitiveGene, TransformParams
-from src.rendering.vectorizer.geometry import gene_to_shapely
+from src.rendering.geometry_utils import gene_to_shapely
 
 
 def _hex_to_rgb_01(hex_color: str) -> Tuple[float, float, float]:
