@@ -18,7 +18,7 @@ This project builds a full graphical application around a genetic-art workflow. 
 | ------------------------------------------------------ | :--------------: | :-------------------------------------: |
 | Evolution engine (genome, mutation, composition logic) |         ✅        |              **Inherited**              |
 | Command-line workflow                                  |         ✅        |                    ❌                    |
-| Rendering system                                       |       Basic      | **Rewritten (vector + raster engines)** |
+| Rendering system                                       |       Basic      | **Rewritten vector engine** |
 | GUI (PySide6 desktop app)                              |         ❌        |                 **New**                 |
 | Population browser & metadata                          |         ❌        |                 **New**                 |
 | Live mutation controls                                 |         ❌        |                 **New**                 |
@@ -85,7 +85,7 @@ Everything is saved automatically, including metadata and full lineage.
 ```
 src/
  ├─ core/                    # Evolution engine (from original repo)
- ├─ rendering/              # New rendering pipeline (vectorizer + rasterizer)
+ ├─ rendering/              # New rendering pipeline
  ├─ app/                    # PySide6 GUI (screens, widgets, theme)
  ├─ population_manager/     # Persistence, metadata, autosave, history
 main.py                     # Entry point
@@ -99,7 +99,6 @@ This fork includes an entirely reworked rendering stack featuring:
 
 * Vector-based geometry extraction
 * Shapely-driven boolean geometry evaluation
-* SDF-free raster backend (replacing the original pipeline)
 * Options for:
 
   * PNG export
