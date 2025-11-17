@@ -36,10 +36,10 @@ class MutationPanel(QGroupBox):
                                                   
     PARAM_DEFINITIONS = {
                                             
-        "gene_mutation_prob": ("Gene Mut %", 0.0, 1.0),
-        "add_primitive_prob": ("Add Prim %", 0.0, 1.0),
-    "remove_primitive_prob": ("Remove Prim %", 0.0, 1.0),
-        "operator_mutation_prob": ("Op Mut %", 0.0, 1.0),
+        "gene_mutation_prob": ("Gene Mut", 0.0, 1.0),
+        "add_primitive_prob": ("Add Prim", 0.0, 1.0),
+    "remove_primitive_prob": ("Remove Prim", 0.0, 1.0),
+        "operator_mutation_prob": ("Op Mut", 0.0, 1.0),
         "translate_sigma": ("Trans Sigma", 0.0, 0.5),
         "rotate_sigma": ("Rotate Sigma", 0.0, 0.5),
         "scale_sigma": ("Scale Sigma", 0.0, 0.5),
